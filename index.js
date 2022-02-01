@@ -13,11 +13,11 @@ app.get('/', (req, res) => {
     res.send('Servidor OK !!!');
 })
 
-app.get('/teachers', (req, res) => {
+app.get('/enfermera', (req, res) => {
     const db = new Database()
     const cn = db.getConnection()
     cn.execute(
-        'SELECT * FROM profesor', [],
+        'SELECT * FROM enfermera', [],
         function (err, results, fields) {
             res.json(results)
         }
@@ -25,13 +25,14 @@ app.get('/teachers', (req, res) => {
 
 })
 
+
 // Obtener solo un profesor
-app.get('/teachers/:id', (req, res) => {
+app.get('/enfermera/:id', (req, res) => {
     const { id } = req.params;
     const db = new Database()
     const cn = db.getConnection()
     cn.execute(
-        'SELECT * FROM profesor WHERE id = ?', [id],
+        'SELECT * FROM enfermera WHERE idenfermeras = ?', [id],
         function (err, results, fields) {
             res.json(results[0])
         }
@@ -40,18 +41,18 @@ app.get('/teachers/:id', (req, res) => {
 })
 
                     //REquest peticion     response  response
-app.post('/teachers', (req, res) => {
+app.post('/enfermera', (req, res) => {
     const body = req.body;
     console.log (body);
     const db = new Database()
     const cn = db.getConnection()
 
-    const query = `INSERT INTO PROFESOR     
-                (nombres, apellidos, correo, sexo, estado_civil) VALUES
-                 (?,?,?,?,?)`;
+    const query = `INSERT INTO ENFERMERA     
+                (idenfermeras,nombre, apellido,direccion) VALUES
+                 (?,?,?,?)`;
 
     cn.execute(
-        query, [body.nombres, body.apellidos, body.correo, body.sexo, body.estado_civil],
+        query, [body.idenfermeras, body.nombre, body.apellido, body.direccion],
         function (err, results, fields) {
             if (err) {
                 res.status(500).json({
@@ -66,17 +67,17 @@ app.post('/teachers', (req, res) => {
 })
 
 //update
-app.put('/teachers', (req, res) => {
+app.put('/enfermera', (req, res) => {
     const body = req.body;
     console.log (body);
     const db = new Database()
     const cn = db.getConnection()
 
-    const query = `UPDATE PROFESOR     
-                SET nombres=?, apellidos=?, correo=?, sexo=?, estado_civil=? 
-                WHERE id = ?`;
+    const query = `UPDATE ENFERMERA     
+                SET nombre=?, apellido=?, direccion=?
+                WHERE idenfermeras = ?`;
     cn.execute(
-        query, [body.nombres, body.apellidos, body.correo, body.sexo, body.estado_civil, body.id],
+        query, [body.nombre, body.apellido, body.direccion,body.idenfermeras],
         function (err, results, fields) {
             if (err) {
                 res.status(500).json({
@@ -89,6 +90,19 @@ app.put('/teachers', (req, res) => {
         }
     );
 })
+
+app.get('/paciente', (req, res) => {
+    const db = new Database()
+    const cn = db.getConnection()
+    cn.execute(
+        'SELECT * FROM paciente', [],
+        function (err, results, fields) {
+            res.json(results)
+        }
+    );
+
+})
+
 //Habilitamos el servidor en el puerto indicado
 //En esta caso sera 3001 porque el 3000 ya es usado por React
 app.listen(port, () => {
